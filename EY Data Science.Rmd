@@ -1,0 +1,64 @@
+---
+title: "EY Data Science Competition"
+author: "Jeremy Chan"
+date: "12/14/2016"
+output: html_document
+---
+
+Data Loading
+```{r}
+setwd("~/Documents/GitHub/EY-Data-Science/Data")
+data = read.csv("data_train.csv", header = T, sep = ";")
+attach(data)
+```
+
+Data Exploration
+```{r}
+# Checking for NAs
+sum(is.na(data$RiderID))
+sum(is.na(data$Index))
+sum(is.na(data$Date))
+sum(is.na(data$Time))
+sum(is.na(data$Average_Gradient))
+sum(is.na(data$Max_Gradient))
+sum(is.na(data$Distance))
+sum(is.na(data$Highest_point))
+sum(is.na(data$Lowest_point))
+sum(is.na(data$Measured_time))
+sum(is.na(data$Moving_time))
+sum(is.na(data$Average_heart_rate))
+sum(is.na(data$Max_heart_rate))
+sum(is.na(data$Speed))
+sum(is.na(data$Power))
+sum(is.na(data$Cadence))
+# No NAs found
+
+# Checking for Outliers
+hist(Average_Gradient)
+hist(Max_Gradient)
+hist(Highest_point)
+hist(Lowest_point)
+hist(Measured_time, xlim = c(0,10000))
+hist(Moving_time)
+hist(Average_heart_rate)
+hist(Max_heart_rate)
+hist(Speed)
+hist(Power)
+hist(Cadence)
+```
+
+Early Models
+```{r}
+set.seed(415)
+
+samp = sample(nrow(data), .7*nrow(data))
+train = data[samp,]
+test = data[-samp,]
+
+id_cols = c(1,2,3,4)
+train2 = train[,-id_cols]
+test2 = test[,-id_cols]
+
+library(randomForest)
+rForest_model = randomForest(Speed ~ ., data = train2)
+```
